@@ -1,30 +1,44 @@
-#MODULES
-from io import UnsupportedOperation
+#+++++++++++++MODULE++++++++++++++++
 from tkinter import *
 from tkinter import messagebox
 import pickle
 import time
-from datetime import date , datetime
+from datetime import date,datetime
 from random import randint
 import os.path
 
 
 
 
-#WINDOW
+#++++++++++++++++WINDOW++++++++++++++++
 window=Tk()
 window.title("Login")
-#window.geometry("690x750")
+window.geometry("670x770")
+impp=PhotoImage(file="images/imap.png")
+window.iconphoto(False,impp)
 #window.geometry("1535x863") ------ my pc resolutuion
-screen_width = window.winfo_screenwidth()
-screen_height = window.winfo_screenheight()
-size=str(screen_width)+'x'+str(screen_height)
-window.geometry(size)
+
+'''To get your Monitor's width'''
+#screen_width = window.winfo_screenwidth()
+
+'''To get your Monitor's height'''
+#screen_height = window.winfo_screenheight()
+
+'''Inserting values'''
+#size=str(screen_width)+'x'+str(screen_height)
+#window.geometry(size)
+
+'''Make window Non-Resizable'''
 window.resizable(0,0)
-window.overrideredirect(True)
+
+''' Remove maximize,minimize,cancel buttons'''
+#window.overrideredirect(True)
 
 
-#FUNCTIONS
+
+
+#+++++++++++++++++FUNCTIONS+++++++++++++++++
+
 def togetdate():
     today = date.today()
     return today
@@ -44,26 +58,29 @@ def reset():
 def signup():
     root=Toplevel()
     root.title("SignUp From")
-    #root.geometry("1400x730")
-    screen_width = root.winfo_screenwidth()
+    root.geometry("1400x730")
+    root.iconphoto(False,impp)
+
+    '''screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
     size=str(screen_width)+'x'+str(screen_height)
     root.geometry(size)
+    root.overrideredirect(True)'''
+
     root.resizable(0,0)
-    root.overrideredirect(True)
+
+    #___________Photos_________________
+
     registerimage=PhotoImage(file="images/register.png")
     resetimage=PhotoImage(file="images/reset.png")
     backto=PhotoImage(file="images/back.png")
     exitimage=PhotoImage(file="images/exit.png")
     bgimage=PhotoImage(file="images/bg.png")
+    lefticon=PhotoImage(file='images/xx.png')
+
     bg=Label(root,image=bgimage)
     bg.pack()
-    signupframe=LabelFrame(bg,bg="white",width=1300,height=600,bd=0).place(x=50,y=50)
-    lefticon=PhotoImage(file='images/xx.png')
-    v=Label(root,image=lefticon,bd=0).place(x=50,y=52)
-    '''rocket=PhotoImage(file='images/logo_white.png')
-    vv=Label(root,image=rocket,bd=0,bg="blue").place(x=70,y=72)'''
-    signuplabel=Label(root,text="SIGNUP HERE",font=("Rockwell Extra Bold",23,"bold"),bg='white',fg='Red').place(x=870,y=100)
+
 
     def quitt():
         root.destroy()
@@ -74,6 +91,7 @@ def signup():
         pop.geometry("610x610")
         pop.resizable(0,0)
         pop.config(bg="yellow")
+        pop.iconphoto(False,impp)
 
         def close():
             pop.destroy()
@@ -137,7 +155,6 @@ def signup():
         lastname.delete(0,END)
         firstname.delete(0,END)
         messagebox.showinfo("Reset","Fields Has Been Reset..!",parent=root)
-        mobilenumber.insert(0,'+91-')
 
 
     def signup(captcavalue,captcaentry,firstname,lastname,mobilenumber,username,password,gender,verify,verifyy):
@@ -145,36 +162,39 @@ def signup():
             if captcavalue==str(captcaentry):
                 if len(firstname) != 0 and firstname.isalpha():
                     if len(lastname) != 0 and lastname.isalpha():
-                        if len(mobilenumber)!= 0 and mobilenumber[4:].isdigit() and len(mobilenumber)==14:
+                        if len(mobilenumber)!= 0 and mobilenumber.isdigit() and len(mobilenumber)==10:
                             if len(username)!= 0 and username.isalnum():
                                 if len(gender)!= 0 and gender !="Select Any One":
-                                    if verifyy == "XYZ":
-                                        if os.path.isfile("password.dat"):
-                                            usernames=[]
-                                            with open ('password.dat','rb') as Myfile:
-                                                while True:
-                                                    try:
-                                                        a=pickle.load(Myfile)
-                                                        usernames.append(a[0])
-                                                        
-                                                    except EOFError:
-                                                        break
+                                    if len(password)>6:
+                                        if verifyy == "XYZ":
+                                            if os.path.isfile("password.dat"):
+                                                usernames=[]
+                                                with open ('password.dat','rb') as Myfile:
+                                                    while True:
+                                                        try:
+                                                            a=pickle.load(Myfile)
+                                                            usernames.append(a[0])
+                                                            
+                                                        except EOFError:
+                                                            break
 
-                                            if username not in usernames:
-                                                final(firstname,lastname,mobilenumber,username,password,gender)
+                                                if username not in usernames:
+                                                    final(firstname,lastname,mobilenumber,username,password,gender)
+                                                else:
+                                                    messagebox.showwarning("ERROR","Username Already Exixts.!",parent=root)
                                             else:
-                                                messagebox.showwarning("ERROR","Username Already Exixts.!",parent=root)
+                                                final(firstname,lastname,mobilenumber,username,password,gender)
                                         else:
-                                            final(firstname,lastname,mobilenumber,username,password,gender)
+                                            messagebox.showwarning("ERROR","Please Enter Correct Verification code.!",parent=root)                              
                                     else:
-                                         messagebox.showwarning("ERROR","Please Enter Correct Verification code.!",parent=root)                              
-                                        
+                                        messagebox.showwarning("ERROR","Please Enter Password Of More Than 6 Digits",parent=root)
+
                                 else:
                                     messagebox.showwarning("ERROR","Please Enter Proper Gender.!",parent=root)
                             else:
                                 messagebox.showwarning("ERROR","Please Enter Username.!",parent=root)
                         else:
-                            messagebox.showwarning("ERROR","Please Enter Proper Mobilenumber.!",parent=root)
+                            messagebox.showwarning("ERROR","Please Enter Proper Mobile Number.!",parent=root)
                     else:
                         messagebox.showwarning("ERROR","Please Enter Lastname.!",parent=root)
                 else:
@@ -185,30 +205,44 @@ def signup():
              messagebox.showwarning("ERROR","You Have Not Agreed To Our Policy",parent=root)      
 
 
+    signupframe=LabelFrame(bg,bg="white",width=1300,height=600,bd=0)
+    signupframe.place(x=50,y=50)
+
+    v=Label(root,image=lefticon,bd=0)
+    v.place(x=50,y=52)
+    '''rocket=PhotoImage(file='images/logo_white.png')
+    vv=Label(root,image=rocket,bd=0,bg="blue").place(x=70,y=72)'''
+
+    signuplabel=Label(root,text="SIGNUP HERE",font=("Rockwell Extra Bold",23,"bold"),bg='white',fg='Red')
+    signuplabel.place(x=870,y=100)
+
     #firstname label------------------------
-    firstnamelable=Label(root,text="FIRST NAME:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue").place(x=700,y=170)
+    firstnamelable=Label(root,text="FIRST NAME:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue")
+    firstnamelable.place(x=700,y=170)
 
     #firstname entery-----------------------
     firstname=Entry(root,width=20,bg="silver",font=(8),fg="black")
     firstname.place(x=700,y=195)
 
     #lastname label------------------------
-    lastnamelable=Label(root,text="LAST NAME:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue").place(x=1050,y=170)
+    lastnamelable=Label(root,text="LAST NAME:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue")
+    lastnamelable.place(x=1050,y=170)
 
     #lasttname entery-----------------------
     lastname=Entry(root,width=20,bg="silver",font=(8),fg="black")
     lastname.place(x=1050,y=195)
 
     #mobile label------------------------
-    mobilenumberlable=Label(root,text="MOBILE NUMBER:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue").place(x=700,y=235)
+    mobilenumberlable=Label(root,text="MOBILE NUMBER:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue")
+    mobilenumberlable.place(x=700,y=235)
 
     #mobilenumber entery-----------------------
     mobilenumber=Entry(root,width=20,bg="silver",font=(8),fg="black")
-    mobilenumber.insert(0,"+91-")
     mobilenumber.place(x=700,y=260)
     
     #gender lable ---------------------------
-    genderlable=Label(root,text="GENDER:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue").place(x=1050,y=240)
+    genderlable=Label(root,text="GENDER:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue")
+    genderlable.place(x=1050,y=240)
 
     #genderentery-----------------------
     clicker=StringVar()
@@ -219,16 +253,19 @@ def signup():
     gender["menu"].config(bg="Yellow")
 
     #captca label------------------------
-    Captcalable=Label(root,text="CAPTCHA:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue").place(x=1050,y=305)
+    captcalable=Label(root,text="CAPTCHA:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue")
+    captcalable.place(x=1050,y=305)
     captcavalue=str(randint(1000,5000))
-    captca=Label(root,text=captcavalue,font=("Rockwell",20,"bold"),bg='blue',fg="white").place(x=1100,y=335)
+    captca=Label(root,text=captcavalue,font=("Rockwell",20,"bold"),bg='blue',fg="white")
+    captca.place(x=1100,y=335)
 
     #captcaentery-----------------------
     captcaentry=Entry(root,width=20,bg="silver",font=(8),fg="black")
     captcaentry.place(x=1050,y=385)
 
     #username label------------------------
-    usernamelable=Label(root,text="USERNAME:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue").place(x=700,y=300)
+    usernamelable=Label(root,text="USERNAME:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue")
+    usernamelable.place(x=700,y=300)
 
 
     #usernameentery-----------------------
@@ -237,14 +274,16 @@ def signup():
 
 
     #password label------------------------
-    passwordlable=Label(root,text="PASSWORD:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue").place(x=700,y=363)
+    passwordlable=Label(root,text="PASSWORD:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue")
+    passwordlable.place(x=700,y=363)
 
     #passwordentery-----------------------
     password=Entry(root,width=20,bg="silver",font=(8),fg="black")
     password.place(x=700,y=390)
 
     #verify label------------------------
-    verifylable=Label(root,text="VERIFICATION CODE:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue").place(x=700,y=440)
+    verifylable=Label(root,text="VERIFICATION CODE:",font=("Bahnschrift",12,"bold"),bg='white',fg="blue")
+    verifylable.place(x=700,y=440)
 
     #verifyentery-----------------------
     verifyy=Entry(root,width=10,bg="silver",font=(8),fg="brown")
@@ -253,7 +292,8 @@ def signup():
     #agreement------------------
     cb = IntVar()
     cb.set(0)
-    verify=Checkbutton(root,variable=cb,text="Yes, I Agree To All The Terms & Conditions",font=("Bahnschrift",12,"bold"),onvalue=1,offvalue=0).place(x=700,y=490)
+    verify=Checkbutton(root,variable=cb,text="Yes, I Agree To All The Terms & Conditions",font=("Bahnschrift",12,"bold"),bg='white',onvalue=1,offvalue=0)
+    verify.place(x=700,y=490)
     
 
     signupbutton=Button(root,cursor="hand2", image=registerimage,command= lambda : signup(captcavalue,captcaentry.get(),firstname.get(),lastname.get(),mobilenumber.get(),username.get(),password.get(),clicker.get(),cb.get(),verifyy.get()),bd=0)
@@ -308,21 +348,23 @@ def login(usernamee,passwordd):
         messagebox.showinfo("NO PRE-EXISTING DATA","No Pre-exesting username And Password Found!.\n\nCreate New profile")
 
 def alllogintry(username,password):
-    fff=open('alllogintry.txt','a') 
-    a="Name :--> "+str(username)+"  Password :--> "+str(password)+"   Date :--> "+str(togetdate())+"   Time :--> "+str(togettime())
-    fff.write(a)
-    fff.write('\n')
-    fff.close()
+    file=open('alllogintry.txt','a') 
+    entry=str({'Name':str(username),'Password':str(password),'Date':str(togetdate()),'time':str(togettime())})
+    #a="Name :--> "+str(username)+"  Password :--> "+str(password)+"   Date :--> "+str(togetdate())+"   Time :--> "+str(togettime())
+    file.write(entry)
+    file.write('\n')
+    file.close()
 
 def logindetails(username):
-    fff=open('logins.txt','a') 
-    a="Name :--> "+str(username)+"   Date :--> "+str(togetdate())+"   Time :--> "+str(togettime())
-    fff.write(a)
-    fff.write('\n')
-    fff.close()
+    file=open('logins.txt','a')
+    entry=str({'Name':str(username),'Date':str(togetdate()),'time':str(togettime())})
+    #a="Name :--> "+str(username)+"   Date :--> "+str(togetdate())+"   Time :--> "+str(togettime())
+    file.write(entry)
+    file.write('\n')
+    file.close()
 
 def quit():
-    window.quit()
+    window.destroy()
 
 def mainwindow():
     main=Toplevel()
@@ -337,14 +379,22 @@ def mainwindow():
     Button(main,text="Exit",command=quitt).pack()
 
     main.mainloop()
-# Add a menu bar -----
+
+
+
+#------------------------ Add a menu bar -------------------------------
 menu=Menu(window)
 window.config(menu=menu)
 filemenu=Menu(menu)
 menu.add_cascade(label="COMMANDS",menu=filemenu)
 filemenu.add_command(label="Quit",command=quit)
 
-bgimage=PhotoImage(file="images/bg1.png")
+
+#__main__
+
+'''Images'''
+randomnumber=str(randint(1,3))
+bgimage=PhotoImage(file="images/bg"+randomnumber+".png")
 loginicon=PhotoImage(file="images/loginicon.png")
 passicon=PhotoImage(file='images/passicon.png')
 loginimage=PhotoImage(file="images/login.png")
@@ -352,22 +402,57 @@ registerimage=PhotoImage(file="images/register.png")
 resetimage=PhotoImage(file="images/reset.png")
 bg=Label(window,image=bgimage)
 bg.pack()
-loginframe=LabelFrame(bg,text="",bg="white",width=450,height=600,bd=0).place(x=100,y=100)
-loginlabel=Label(window,text="LOGIN HERE",font=("Rockwell Extra Bold",23,"bold"),bg='white',fg='Red').place(x=215,y=190)
-vv=Label(window,image=loginicon).place(x=150,y=305)
-usernamelable=Label(window,text="USERNAME:",font=("Bahnschrift",15,"bold"),bg='white').place(x=150,y=270)
+
+'''++++++++++++Contents++++++++++++++++'''
+
+
+'''Login contents'''
+loginframe=LabelFrame(bg,text="",bg="white",width=450,height=600,bd=0)
+loginframe.place(x=100,y=100)
+
+loginlabel=Label(window,text="LOGIN HERE",font=("Rockwell Extra Bold",23,"bold"),bg='white',fg='Red')
+loginlabel.place(x=215,y=190)
+
+
+
+'''username contents'''
+vv=Label(window,image=loginicon)
+vv.place(x=150,y=305)
+
+usernamelable=Label(window,text="USERNAME:",font=("Bahnschrift",15,"bold"),bg='white')
+usernamelable.place(x=150,y=270)
+
 username=Entry(window,width=30,bg="silver",font=(8),fg="blue")
 username.place(x=190,y=305)
-vvv=Label(window,image=passicon).place(x=150,y=405)
-passwordlable=Label(window,text="PASSWORD:",font=("Bahnschrift",15,"bold"),bg='white').place(x=150,y=370)
+
+
+
+'''password contents'''
+vvv=Label(window,image=passicon)
+vvv.place(x=150,y=405)
+
+passwordlable=Label(window,text="PASSWORD:",font=("Bahnschrift",15,"bold"),bg='white')
+passwordlable.place(x=150,y=370)
+
 password=Entry(window,width=30,bg="silver",font=(8),fg="blue")
 password.place(x=190,y=405)
+
+'''login button'''
 loginbutton=Button(window,image=loginimage,cursor="hand2", command=lambda : login(str(username.get()),str(password.get())),bd=0)
-loginbutton.place(x=200,y=475)
+loginbutton.place(x=200,y=478)
+
+'''reset button'''
 resetbutton=Button(window,cursor="hand2",image=resetimage,command=reset,bd=0)
 resetbutton.place(x=365,y=472)
-signupbutton=Button(window,cursor="hand2", image=registerimage,command=signup,bd=0)
-signupbutton.place(x=380,y=595)
+
+'''signup contents'''
 registerlable=Label(window,text="Are You A New User :",font=("Bahnschrift",14),fg="black",bg="white")
 registerlable.place(x=190,y=600)
+
+signupbutton=Button(window,cursor="hand2", image=registerimage,command=signup,bd=0)
+signupbutton.place(x=380,y=595)
+
+
+
+
 window.mainloop()
